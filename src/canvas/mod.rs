@@ -3,6 +3,8 @@ pub mod color;
 pub mod error;
 
 use std::result::Result;
+use std::path::Path;
+use image::{Rgba, ImageBuffer};
 use pixel::{Pixel, create_empty_pixel};
 use crate::canvas::color::{create_rgb_color, create_empty_color};
 use error::CanvasError;
@@ -71,6 +73,23 @@ pub fn interact_with_pixel(canvas: &mut Canvas, pixel_num: &u32) -> Result<(), C
         Mode::Draw => canvas.pixels[*pixel_num as usize].curr_color = create_rgb_color(255,0,0),
         Mode::Erase => canvas.pixels[*pixel_num as usize].curr_color = create_empty_color(),
     }
+    Ok(())
+}
+
+pub fn save_canvas_as_png(canvas: &Canvas, file_path: &str) -> Result<(), CanvasError> {
+    let (width, height) = (canvas.dimensions.0 as u32, canvas.dimensions.1 as u32);
+    let mut img = ImageBuffer::<Rgba<u8>, Vec<u8>>::new(width, height);
+    for (index, pixel) in canvas.pixels.iter().enumerate() {
+        let x = (index as u32) % width;
+        let y = (index as u32) / width;
+
+        let color = pixel.curr_color.to_rgba();
+        img.put_pixel(x,y, Rgba([color[0], color[1], color[2], color[3]]))
+    }
+
+    img.save(Path::new(file_path))
+        .map_err(|_| CanvasError::FileSaveError{ filepath: file_path.to_string() })?;
+
     Ok(())
 }
 

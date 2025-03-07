@@ -1,5 +1,5 @@
 use crate::gui::egui::{Sense, Ui, Widget, Response, vec2, Rect, Painter, Pos2, Key};
-use crate::canvas::{Canvas, get_pixel_xy_coords, get_pixel_count, interact_with_pixel, Mode};
+use crate::canvas::{Canvas, get_pixel_xy_coords, get_pixel_count, interact_with_pixel, save_canvas_as_png, Mode};
 
 /// Canvas object with pixels
 pub struct CanvasWidget<'a> {
@@ -43,10 +43,15 @@ impl Widget for CanvasWidget<'_>{
 
         if ui.is_rect_visible(rect) {
             let input = ui.input(|i| i.clone());
-            if input.key_pressed(Key::E) {
-                self.canvas.mode = Mode::Erase;
-            } else if input.key_pressed(Key::D) {
+            if input.key_pressed(Key::D) {
                 self.canvas.mode = Mode::Draw;
+            } else if input.key_pressed(Key::E) {
+                self.canvas.mode = Mode::Erase;
+            } else if input.key_pressed(Key::S) {
+                match save_canvas_as_png(&self.canvas, "canvas_output.png") {
+                    Ok(_) => println!("Canvas saved!"),
+                    Err(e) => eprintln!("error saving canvas: {}", e),
+                }
             } else if input.pointer.primary_clicked() {
                 if let Some(pointer_pos) = ui.input(|i| i.pointer.interact_pos()) {
                     let pixel_num:u32 = self.get_pixel_from_pointer(pointer_pos, &rect);

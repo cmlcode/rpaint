@@ -1,6 +1,7 @@
 #[derive(Debug)]
 pub enum CanvasError {
     CanvasTooLarge { max_pixels: u32, requested: u32 },
+    FileSaveError { filepath: String }
 }
 
 impl std::fmt::Display for CanvasError {
@@ -9,6 +10,9 @@ impl std::fmt::Display for CanvasError {
             CanvasError::CanvasTooLarge { max_pixels, requested } => {
                 write!(f, "Requested {} pixels, but the maximum allowed is {}.", requested, max_pixels)
             },
+            CanvasError::FileSaveError { filepath } => {
+                write!(f, "Failed saving file with path {}.", filepath )
+            }
         }
     }
 }

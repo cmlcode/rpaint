@@ -1,5 +1,5 @@
 use eframe::egui::Color32;
-use image::Rgb;
+use image::{Rgb, Rgba};
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Color {
@@ -11,6 +11,13 @@ impl Color {
         match self.color {
             Some(Rgb([r, g, b])) => Color32::from_rgb(r, g, b),
             None => Color32::TRANSPARENT,
+        }
+    }
+
+    pub fn to_rgba(&self) -> Rgba<u8> {
+        match self.color {
+            Some(Rgb([r,g,b])) => Rgba([r,g,b,255]),
+            None => Rgba([0,0,0,0])
         }
     }
 }
