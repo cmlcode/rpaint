@@ -11,7 +11,6 @@ pub fn create_pixel() -> Pixel {
 
 pub fn create_empty_pixel() -> Pixel {
     Pixel {curr_color:create_empty_color()}
-
 }
 
 #[cfg(test)]

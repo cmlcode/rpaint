@@ -1,13 +1,8 @@
-mod gui;
 mod canvas;
-
-use gui::CanvasGui;
+mod gui;
 
 fn main() {
-    let native_options = eframe::NativeOptions::default();
-    eframe::run_native(
-        "Canvas",
-        native_options,
-        Box::new(|_cc| Ok(Box::new(CanvasGui::default()))),
-    );
+    if let Err(e) = gui::run() {
+        eprintln!("Error running application: {}", e);
+    }
 }

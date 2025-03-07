@@ -1,8 +1,18 @@
+use eframe::egui::Color32;
 use image::Rgb;
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Color {
     pub color: Option<Rgb<u8>>
+}
+
+impl Color {
+    pub fn to_egui_color32(&self) -> Color32 {
+        match self.color {
+            Some(Rgb([r, g, b])) => Color32::from_rgb(r, g, b),
+            None => Color32::TRANSPARENT,
+        }
+    }
 }
 
 pub fn create_empty_color() -> Color{
